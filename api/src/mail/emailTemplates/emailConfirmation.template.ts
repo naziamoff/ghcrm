@@ -1,14 +1,10 @@
-interface ConfirmationTemplateProps {
-  domain: string;
-  token: string;
-  email: string;
-}
+import { ConfirmationTemplateOptions } from './interfaces/ConfirmationTemplateOptions';
 
 export function ConfirmationTemplate({
                                        domain,
                                        token,
                                        email,
-                                     }: ConfirmationTemplateProps): string {
+                                     }: ConfirmationTemplateOptions): string {
   const confirmLink = `${domain}/auth/email-confirmation?token=${token}&email=${email}`;
 
   return `

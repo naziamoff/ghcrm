@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GithubProject } from './interfaces/githubProject';
-
-interface GetRepoOptions {
-  owner: string;
-  name: string;
-}
+import { GetRepoOptions } from './interfaces/getRepoOptions';
 
 @Injectable()
 export class GithubService {
