@@ -7,7 +7,7 @@ export const useSignUp = () => {
   const baseUrl = process.env.REACT_APP_API_URL;
 
   const navigate = useNavigate();
-  const [error, setHasError] = useState('');
+  const [error, setError] = useState('');
   const [success, setIsSuccess] = useState(false);
 
   const signUp = async (
@@ -16,20 +16,21 @@ export const useSignUp = () => {
     confirmPassword: string,
   ) => {
     if (password !== confirmPassword) {
-      setHasError('Passwords do not match');
+      setError('Passwords do not match');
       return;
     }
 
     const route = `${baseUrl}/${AuthRoutes.SignUp}`;
 
     try {
-      const response = await api.post(route, { email, password });
+      await api.post(route, { email, password });
 
       setIsSuccess(true);
-      setHasError('');
+      setError('');
       navigate('/auth/confirm-email');
     } catch (err: any) {
-      setHasError('An error occurred while trying to sign up');
+      setError(err.message);
+
       setIsSuccess(false);
     }
   };

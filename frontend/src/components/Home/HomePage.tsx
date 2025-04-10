@@ -10,8 +10,7 @@ export const HomePage = () => {
         GitHub CRM
       </Typography>
       <Typography variant="h5" color="textSecondary" paragraph>
-        Manage your GitHub interactions like a pro. Track issues, organize
-        contacts, and never miss a follow-up again.
+        Manage your GitHub interactions like a pro.
       </Typography>
 
       <Box mt={4}>

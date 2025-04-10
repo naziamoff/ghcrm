@@ -15,7 +15,6 @@ interface UseProjectsHookResult {
 export const useProjects = (): UseProjectsHookResult => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error>();
 
   const fetchProjects = useCallback(async () => {
     setLoading(true);
@@ -32,8 +31,6 @@ export const useProjects = (): UseProjectsHookResult => {
   }, []);
 
   const handleDelete = useCallback(async (id: string) => {
-    setLoading(true);
-
     try {
       const { data } = await api.delete(`/${ProjectRoutes.Index}/${id}`);
 
@@ -42,40 +39,35 @@ export const useProjects = (): UseProjectsHookResult => {
       }
     } catch (error) {
       console.error('Delete failed:', error);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
   const handleAddProject = useCallback(async (repoPath: string) => {
-    setLoading(true);
-
     try {
-      const { data } = await api.post(
+      const { data: newProject } = await api.post(
         `/${ProjectRoutes.Create}`,
         { path: repoPath },
       );
 
-      setProjects((prev) => ({
-        ...prev,
-        data,
-      }));
+      setProjects((prevProjects) => [...prevProjects, newProject]);
     } catch (error) {
       console.error('Failed to add project:', error);
-    } finally {
-      setLoading(false);
     }
-  }, [fetchProjects]);
+  }, [projects, setProjects]);
 
   const handleUpdate = useCallback(async (id: string) => {
     try {
-      setLoading(true);
+      const { data } = await api.get(`/${ProjectRoutes.Refresh}/${id}`);
 
-      await api.get(`/${ProjectRoutes.Refresh}/${id}`);
+      setProjects((prevProjects) => prevProjects.map(
+        (project) => (
+          project.id === data.id
+            ? data
+            : project
+        ),
+      ));
     } catch (error) {
       console.error('Update failed:', error);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
