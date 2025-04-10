@@ -1,10 +1,10 @@
 import { ConfirmationTemplateOptions } from './interfaces/ConfirmationTemplateOptions';
 
 export function ConfirmationTemplate({
-                                       domain,
-                                       token,
-                                       email,
-                                     }: ConfirmationTemplateOptions): string {
+  domain,
+  token,
+  email,
+}: ConfirmationTemplateOptions): string {
   const confirmLink = `${domain}/auth/email-confirmation?token=${token}&email=${email}`;
 
   return `

@@ -7,17 +7,9 @@ import { MailService } from '../mail/mail.service';
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module';
 
 @Module({
-  imports: [
-    forwardRef(() => EmailConfirmationModule),
-  ],
+  imports: [forwardRef(() => EmailConfirmationModule)],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    UserService,
-    PasswordService,
-    MailService,
-  ],
+  providers: [AuthService, UserService, PasswordService, MailService],
   exports: [AuthService],
 })
-export class AuthModule {
-}
+export class AuthModule {}

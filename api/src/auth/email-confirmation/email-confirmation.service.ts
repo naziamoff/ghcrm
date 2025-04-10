@@ -1,4 +1,10 @@
-import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from '../auth.service';
@@ -19,8 +25,7 @@ export class EmailConfirmationService {
     private readonly userService: UserService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-  ) {
-  }
+  ) {}
 
   /**
    * Verifies the token that is being sent from the email confirmation flow.
@@ -55,10 +60,7 @@ export class EmailConfirmationService {
       throw new NotFoundException('User not found');
     }
 
-    await this.userService.updateByPk(
-      existingUser.id,
-      { isVerified: true },
-    );
+    await this.userService.updateByPk(existingUser.id, { isVerified: true });
 
     await this.accessTokenService.delete(existingToken.id);
 

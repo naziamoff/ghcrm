@@ -21,5 +21,4 @@ import { ConfigModule } from '@nestjs/config';
   controllers: [ProjectController],
   providers: [ProjectService, GithubService, UserService],
 })
-export class AppModule {
-}
+export class AppModule {}

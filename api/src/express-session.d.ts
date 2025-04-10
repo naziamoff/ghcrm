@@ -6,6 +6,6 @@ import 'express-session';
  */
 declare module 'express-session' {
   interface SessionData {
-    userId?: number;  // Optional userId field to store the user's ID.
+    userId?: number; // Optional userId field to store the user's ID.
   }
 }

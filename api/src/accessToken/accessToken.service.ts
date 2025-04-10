@@ -5,10 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AccessTokenService {
-  constructor(
-    private readonly prismaService: PrismaService,
-  ) {
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   create(createTokenDto: CreateTokenDto): Promise<AccessToken> {
     return this.prismaService.accessToken.create({
@@ -22,7 +19,9 @@ export class AccessTokenService {
     });
   }
 
-  findFirst(whereOptions: Prisma.AccessTokenWhereInput): Promise<AccessToken | null> {
+  findFirst(
+    whereOptions: Prisma.AccessTokenWhereInput,
+  ): Promise<AccessToken | null> {
     return this.prismaService.accessToken.findFirst({
       where: whereOptions,
     });

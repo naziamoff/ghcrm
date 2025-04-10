@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { GithubProject } from './interfaces/githubProject';
 import { GetRepoOptions } from './interfaces/getRepoOptions';
+import { GetGithubRepositoryResult } from './interfaces/getGithubRepositoryResult';
 
 @Injectable()
 export class GithubService {
-  constructor() {
-  }
+  constructor() {}
 
   async getRepository({ owner, name }: GetRepoOptions): Promise<GithubProject> {
     try {
-      const response = await fetch(`https://api.github.com/repos/${owner}/${name}`);
-      const repository = await response.json();
+      const response = await fetch(
+        `https://api.github.com/repos/${owner}/${name}`,
+      );
+
+      const repository = (await response.json()) as GetGithubRepositoryResult;
 
       return {
         url: repository.html_url,

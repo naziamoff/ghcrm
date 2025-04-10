@@ -5,7 +5,9 @@ export const parseRepoPath = (path: string) => {
   const match = path.match(regex);
 
   if (!match) {
-    throw new BadRequestException('Invalid project path. Must be in the format "owner/repo".');
+    throw new BadRequestException(
+      'Invalid project path. Must be in the format "owner/repo".',
+    );
   }
 
   return {

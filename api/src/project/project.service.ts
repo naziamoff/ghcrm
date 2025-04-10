@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { GithubService } from '../github/github.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProjectDto } from './dto/CreateProject.dto';
@@ -7,18 +11,21 @@ import { DeleteProjectDto } from './dto/DeleteProject.dto';
 import { RefreshProjectDto } from './dto/RefreshProject.dto';
 import { parseRepoPath } from './helpers/parseRepoPath';
 
+export interface ProcessGithubRepositoryOptions {
+  owner: string;
+  name: string;
+  projectId: number;
+  userId: number;
+}
+
 @Injectable()
 export class ProjectService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly githubService: GithubService,
-  ) {
-  }
+  ) {}
 
-  async findUnique(
-    projectId: number,
-    userId: number,
-  ): Promise<Project | null> {
+  async findUnique(projectId: number, userId: number): Promise<Project | null> {
     return this.prismaService.project.findUnique({
       where: {
         id: projectId,
@@ -38,7 +45,10 @@ export class ProjectService {
    * If the project does not exist, a mock project is created, and an attempt is made to fetch the actual project details from GitHub.
    * If the GitHub request fails, the mock project is deleted.
    */
-  async createAsync(createProjectDto: CreateProjectDto, userId: number): Promise<Project> {
+  async createAsync(
+    createProjectDto: CreateProjectDto,
+    userId: number,
+  ): Promise<Project> {
     const { owner, name } = parseRepoPath(createProjectDto.path);
 
     const existingProject = await this.prismaService.project.findFirst({
@@ -51,31 +61,46 @@ export class ProjectService {
 
     const newProject = await this.createMockProject(userId);
 
-    new Promise(async () => {
-      try {
-        const project = await this.githubService.getRepository({ owner, name });
-
-        await this.prismaService.project.update({
-          where: { id: newProject.id },
-          data: { ...project },
-        });
-      } catch (error) {
-        await this.delete({
-          id: newProject.id,
-          userId,
-        });
-      }
+    this.processGithubRepository({
+      owner,
+      name,
+      userId,
+      projectId: newProject.id,
     });
 
     return newProject;
   }
 
+  async processGithubRepository({
+    owner,
+    name,
+    projectId,
+    userId,
+  }: ProcessGithubRepositoryOptions) {
+    try {
+      const project = await this.githubService.getRepository({ owner, name });
+
+      await this.prismaService.project.update({
+        where: { id: projectId },
+        data: { ...project },
+      });
+    } catch {
+      await this.delete({
+        id: projectId,
+        userId,
+      });
+    }
+  }
+
   async delete({ id, userId }: DeleteProjectDto) {
-    const project = await this.prismaService.project
-      .findUnique({ where: { id, userId } });
+    const project = await this.prismaService.project.findUnique({
+      where: { id, userId },
+    });
 
     if (!project) {
-      throw new NotFoundException('Project not found or does not belong to you');
+      throw new NotFoundException(
+        'Project not found or does not belong to you',
+      );
     }
 
     return this.prismaService.project.delete({

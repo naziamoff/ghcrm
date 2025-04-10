@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { CreateProjectDto } from './dto/CreateProject.dto';
@@ -7,15 +15,10 @@ import { Authorized } from '../auth/decorators/authorized.decorator';
 @Controller('/projects')
 @UseGuards(AuthGuard)
 export class ProjectController {
-  constructor(
-    private readonly projectService: ProjectService,
-  ) {
-  }
+  constructor(private readonly projectService: ProjectService) {}
 
   @Get()
-  async getProjects(
-    @Authorized('id') userId: number,
-  ) {
+  async getProjects(@Authorized('id') userId: number) {
     return this.projectService.findAllByUserId(userId);
   }
 
@@ -28,10 +31,7 @@ export class ProjectController {
   }
 
   @Delete(':id')
-  async delete(
-    @Authorized('id') userId: number,
-    @Param('id') id: string,
-  ) {
+  async delete(@Authorized('id') userId: number, @Param('id') id: string) {
     return this.projectService.delete({
       id: Number(id),
       userId,
@@ -43,18 +43,11 @@ export class ProjectController {
     @Body() createProjectDto: CreateProjectDto,
     @Authorized('id') userId: number,
   ) {
-    return this.projectService.createAsync(
-      createProjectDto,
-      userId,
-    );
+    return this.projectService.createAsync(createProjectDto, userId);
   }
 
-
   @Get('/refresh/:id')
-  async refresh(
-    @Authorized('id') userId: number,
-    @Param('id') id: string,
-  ) {
+  async refresh(@Authorized('id') userId: number, @Param('id') id: string) {
     return this.projectService.refresh({
       id: Number(id),
       userId,

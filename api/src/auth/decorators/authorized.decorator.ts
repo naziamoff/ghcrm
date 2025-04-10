@@ -1,5 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { User } from '@prisma/client';
+import { RequestWithUser } from '../guards/interfaces/requestWithUser';
 
 /**
  * Custom decorator to access user data from the request object.
@@ -10,10 +11,10 @@ import { User } from '@prisma/client';
  * @returns {User | any} - The user object or specific field.
  */
 export const Authorized = createParamDecorator(
-  (data: keyof User, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
+  (userKey: keyof User, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
 
-    return data ? user[data] : user;
+    return userKey ? user[userKey] : user;
   },
 );

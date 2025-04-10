@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
-
 interface CreateUserOptions {
   email: string;
   passwordHash: string;
@@ -10,10 +9,7 @@ interface CreateUserOptions {
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly prismaService: PrismaService,
-  ) {
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   create(createUserOptions: CreateUserOptions): Promise<User> {
     return this.prismaService.user.create({
@@ -29,7 +25,10 @@ export class UserService {
     return this.prismaService.user.findUnique({ where: { email } });
   }
 
-  updateByPk(id: number, override: Prisma.UserUpdateInput): Promise<User | null> {
+  updateByPk(
+    id: number,
+    override: Prisma.UserUpdateInput,
+  ): Promise<User | null> {
     return this.prismaService.user.update({
       where: {
         id,

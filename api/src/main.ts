@@ -12,9 +12,7 @@ async function bootstrap() {
 
   app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')));
 
-  app.useGlobalPipes(
-    new ValidationPipe({ transform: true }),
-  );
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.use(
     session({
@@ -25,9 +23,7 @@ async function bootstrap() {
       cookie: {
         domain: config.getOrThrow<string>('SESSION_DOMAIN'),
         maxAge: 2592000000,
-        httpOnly: Boolean(
-          config.getOrThrow<string>('SESSION_HTTP_ONLY'),
-        ),
+        httpOnly: Boolean(config.getOrThrow<string>('SESSION_HTTP_ONLY')),
         secure: false,
         sameSite: 'lax',
       },

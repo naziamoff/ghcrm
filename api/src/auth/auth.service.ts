@@ -1,4 +1,10 @@
-import { BadRequestException, forwardRef, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { PasswordService } from './password/password.service';
 import { User } from '@prisma/client';
@@ -15,8 +21,7 @@ export class AuthService {
     private readonly passwordService: PasswordService,
     @Inject(forwardRef(() => EmailConfirmationService))
     private readonly emailConfirmationService: EmailConfirmationService,
-  ) {
-  }
+  ) {}
 
   async signUp(signUpDto: SignUpDto): Promise<void> {
     const { email, password } = signUpDto;

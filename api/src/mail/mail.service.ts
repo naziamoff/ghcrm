@@ -8,13 +8,15 @@ export class MailService {
   public constructor(
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
-  ) {
-  }
+  ) {}
 
-  public async sendConfirmationEmail(email: string, token: string) {
+  public async sendConfirmationEmail(
+    email: string,
+    token: string,
+  ): Promise<void> {
     const domain = this.configService.getOrThrow<string>('FE_URL');
 
-    return this.sendEmail(
+    await this.sendEmail(
       email,
       'Email confirmation',
       ConfirmationTemplate({ domain, token, email }),

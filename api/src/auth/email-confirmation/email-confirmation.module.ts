@@ -8,10 +8,7 @@ import { MailService } from '../../mail/mail.service';
 import { AccessTokenService } from '../../accessToken/accessToken.service';
 
 @Module({
-  imports: [
-    MailModule,
-    forwardRef(() => AuthModule),
-  ],
+  imports: [MailModule, forwardRef(() => AuthModule)],
   controllers: [EmailConfirmationController],
   providers: [
     EmailConfirmationService,
@@ -21,5 +18,4 @@ import { AccessTokenService } from '../../accessToken/accessToken.service';
   ],
   exports: [EmailConfirmationService],
 })
-export class EmailConfirmationModule {
-}
+export class EmailConfirmationModule {}
