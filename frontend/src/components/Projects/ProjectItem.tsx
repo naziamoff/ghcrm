@@ -4,8 +4,8 @@ import { Project } from './typedefs/Project';
 
 interface Props {
   project: Project;
-  handleUpdate: (id: string) => void;
-  handleDelete: (id: string) => void;
+  handleUpdate: (id: number) => void;
+  handleDelete: (id: number) => void;
 }
 
 export const ProjectItem: FC<Props> = ({

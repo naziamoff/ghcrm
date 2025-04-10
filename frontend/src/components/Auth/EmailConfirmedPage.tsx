@@ -9,7 +9,7 @@ export const EmailConfirmedPage = () => {
 
   useEffect(() => {
     confirmEmail();
-  }, []);
+  }, [confirmEmail]);
 
   if (loading) {
     return (

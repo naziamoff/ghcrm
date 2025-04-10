@@ -4,9 +4,8 @@ import { AuthRoutes } from '../typedefs/authRoutes';
 import { api } from '../../../api';
 
 export const useSignUp = () => {
-  const baseUrl = process.env.REACT_APP_API_URL;
-
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setIsSuccess] = useState(false);
 
@@ -15,25 +14,27 @@ export const useSignUp = () => {
     password: string,
     confirmPassword: string,
   ) => {
+    setIsLoading(true);
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    const route = `${baseUrl}/${AuthRoutes.SignUp}`;
-
     try {
-      await api.post(route, { email, password });
+      await api.post(AuthRoutes.SignUp, { email, password });
 
       setIsSuccess(true);
       setError('');
       navigate('/auth/confirm-email');
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response.data.message);
 
       setIsSuccess(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return { signUp, success, error };
+  return { signUp, success, error, isLoading };
 };

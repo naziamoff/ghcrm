@@ -8,7 +8,6 @@ export const useSignIn = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_API_URL;
 
   const signIn = async (
     email: string,
@@ -18,7 +17,7 @@ export const useSignIn = () => {
       setLoading(true);
 
       const response = await api.post(
-        `${baseUrl}/${AuthRoutes.SignIn}`,
+        AuthRoutes.SignIn,
         { email, password },
       );
 
@@ -26,9 +25,8 @@ export const useSignIn = () => {
         setError('');
         navigate(ROUTES.Projects);
       }
-    } catch (err) {
-      setError('Network error or server unavailable');
-      console.error(err);
+    } catch (err: any) {
+      setError(err.response.data.message);
     } finally {
       setLoading(false);
     }
