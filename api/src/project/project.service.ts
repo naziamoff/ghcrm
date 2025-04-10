@@ -33,6 +33,11 @@ export class ProjectService {
     });
   }
 
+  /**
+   * Creates a new project asynchronously, first checking if the project already exists for the user.
+   * If the project does not exist, a mock project is created, and an attempt is made to fetch the actual project details from GitHub.
+   * If the GitHub request fails, the mock project is deleted.
+   */
   async createAsync(createProjectDto: CreateProjectDto, userId: number): Promise<Project> {
     const { owner, name } = parseRepoPath(createProjectDto.path);
 
