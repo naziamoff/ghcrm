@@ -1,0 +1,8 @@
+model AccessToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique @db.VarChar(255)
+  email     String
+  expiresAt DateTime @map("expires_at")
+
+  @@map("access_token")
+}

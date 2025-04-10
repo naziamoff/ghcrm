@@ -1,0 +1,16 @@
+model Project {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @map("user_id")
+  url               String   @db.VarChar(255)
+  name              String   @db.VarChar(255)
+  ownerName         String   @map("owner_name") @db.VarChar(255)
+  starsCount        Int      @map("stars_count")
+  forksCount        Int      @map("forks_count")
+  issuesCount       Int      @map("issues_count")
+  externalCreatedAt DateTime @map("external_created_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("project")
+}

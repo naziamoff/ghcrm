@@ -1,0 +1,17 @@
+{
+  "name": "ghcrm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start-api": "cd api && npm run start",
+    "start-fe": "cd frontend && npm run start",
+    "start-redis": "cd api && redis-server"
+  },
+  "private": true,
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

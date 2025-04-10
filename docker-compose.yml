@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./api
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "${FE_PORT}:${FE_PORT}"
+    networks:
+      - app-network
+
+  # MongoDB Service
+  mongo:
+    image: mongo:latest  # Use the official MongoDB image
+    ports:
+      - "27017:27017"  # Exposing MongoDB port to host
+    networks:
+      - app-network
+    volumes:
+      - mongo-data:/data/db  # Persist data between container restarts
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
