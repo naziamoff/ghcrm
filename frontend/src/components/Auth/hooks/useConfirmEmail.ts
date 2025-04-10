@@ -15,7 +15,7 @@ export const useConfirmEmail = () => {
   const [error, setError] = useState(null);
 
   const confirmEmail = async () => {
-    const route = `${baseUrl}/${AuthRoutes.ConfirmEmail}?token=${token}&email=${email}`;
+    const route = `${AuthRoutes.ConfirmEmail}?token=${token}&email=${email}`;
 
     try {
       await api.get(route);

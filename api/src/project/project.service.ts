@@ -5,6 +5,7 @@ import { CreateProjectDto } from './dto/CreateProject.dto';
 import { Project } from '@prisma/client';
 import { DeleteProjectDto } from './dto/DeleteProject.dto';
 import { RefreshProjectDto } from './dto/RefreshProject.dto';
+import { parseRepoPath } from './helpers/parseRepoPath';
 
 @Injectable()
 export class ProjectService {
@@ -14,19 +15,26 @@ export class ProjectService {
   ) {
   }
 
+  async findUnique(
+    projectId: number,
+    userId: number,
+  ): Promise<Project | null> {
+    return this.prismaService.project.findUnique({
+      where: {
+        id: projectId,
+        userId,
+      },
+    });
+  }
+
   async findAllByUserId(userId: number) {
     return this.prismaService.project.findMany({
       where: { userId },
     });
   }
 
-  async create(
-    createProjectDto: CreateProjectDto,
-    userId: number,
-  ): Promise<Project> {
-    const { owner, name } = this.parseRepoPath(createProjectDto.path);
-
-    const project = await this.githubService.getRepository({ owner, name });
+  async createAsync(createProjectDto: CreateProjectDto, userId: number): Promise<Project> {
+    const { owner, name } = parseRepoPath(createProjectDto.path);
 
     const existingProject = await this.prismaService.project.findFirst({
       where: { name, ownerName: owner, userId },
@@ -36,12 +44,25 @@ export class ProjectService {
       throw new BadRequestException('Project is already added');
     }
 
-    return this.prismaService.project.create({
-      data: {
-        ...project,
-        userId,
-      },
+    const newProject = await this.createMockProject(userId);
+
+    new Promise(async () => {
+      try {
+        const project = await this.githubService.getRepository({ owner, name });
+
+        await this.prismaService.project.update({
+          where: { id: newProject.id },
+          data: { ...project },
+        });
+      } catch (error) {
+        await this.delete({
+          id: newProject.id,
+          userId,
+        });
+      }
     });
+
+    return newProject;
   }
 
   async delete({ id, userId }: DeleteProjectDto) {
@@ -73,17 +94,18 @@ export class ProjectService {
     });
   }
 
-  private parseRepoPath(path: string) {
-    const regex = /^([\w-]+)\/([\w-]+)$/; // Matches "owner/repo" with alphanumeric and dashes
-    const match = path.match(regex);
-
-    if (!match) {
-      throw new BadRequestException('Invalid project path. Must be in the format "owner/repo".');
-    }
-
-    return {
-      owner: match[1],
-      name: match[2],
-    };
+  private async createMockProject(userId: number): Promise<Project> {
+    return this.prismaService.project.create({
+      data: {
+        name: 'Loading...',
+        url: 'Loading...',
+        ownerName: 'Loading...',
+        userId,
+        starsCount: 0,
+        forksCount: 0,
+        issuesCount: 0,
+        externalCreatedAt: new Date(),
+      },
+    });
   }
 }

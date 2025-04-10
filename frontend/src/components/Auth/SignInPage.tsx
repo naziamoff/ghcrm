@@ -29,13 +29,6 @@ export const SignInPage = () => {
       >
         <Typography variant="h5">Sign In</Typography>
 
-        {loading && (
-          <Container maxWidth="sm">
-            <CircularProgress />
-            <Typography variant="body1">Signing you in...</Typography>
-          </Container>
-        )}
-
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -80,6 +73,13 @@ export const SignInPage = () => {
           </Box>
         </Box>
       </Box>
+
+      {loading && (
+        <Container maxWidth="sm">
+          <CircularProgress />
+          <Typography variant="body1">Signing you in...</Typography>
+        </Container>
+      )}
     </Container>
   );
 };

@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { CircularProgress, Container, Typography } from '@mui/material';
+import { Alert, CircularProgress, Container, Typography } from '@mui/material';
 import { useProjects } from './hooks/useProjects';
 import { ProjectsTable } from './ProjectsTable';
 import { AddProjectModule } from './AddProjectModule';
 
 export const ProjectsPage = () => {
   const {
+    error,
     loading,
-    projects,
+    projects = [],
     fetchProjects,
     handleAddProject,
     handleUpdate,
@@ -24,17 +25,19 @@ export const ProjectsPage = () => {
         Project List
       </Typography>
 
+      {error && (
+        <Alert severity="error">{error}</Alert>
+      )}
+
       <AddProjectModule handleAddProject={handleAddProject} />
 
-      {loading
-        ? <CircularProgress />
-        : (
-          <ProjectsTable
-            projects={projects}
-            handleUpdate={handleUpdate}
-            handleDelete={handleDelete}
-          />
-        )}
+      <ProjectsTable
+        projects={projects}
+        handleUpdate={handleUpdate}
+        handleDelete={handleDelete}
+      />
+
+      {loading && <CircularProgress />}
     </Container>
   );
 };

@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from 'react';
-import { Box, Button, Container, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Container, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSignUp } from './hooks/useSignUp';
 import { ROUTES } from '../../routes';
@@ -9,7 +9,7 @@ export const SignUpPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const { signUp, error, success } = useSignUp();
+  const { signUp, error, success, isLoading } = useSignUp();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -88,6 +88,13 @@ export const SignUpPage = () => {
           </Box>
         </Box>
       </Box>
+
+      {isLoading && (
+        <Container maxWidth="sm">
+          <CircularProgress />
+          <Typography variant="body1">Signing you in...</Typography>
+        </Container>
+      )}
     </Container>
   );
 };

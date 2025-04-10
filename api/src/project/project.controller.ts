@@ -19,6 +19,14 @@ export class ProjectController {
     return this.projectService.findAllByUserId(userId);
   }
 
+  @Get(':id')
+  async getProject(
+    @Authorized('id') userId: number,
+    @Param('id') projectId: number,
+  ) {
+    return this.projectService.findUnique(projectId, userId);
+  }
+
   @Delete(':id')
   async delete(
     @Authorized('id') userId: number,
@@ -35,7 +43,7 @@ export class ProjectController {
     @Body() createProjectDto: CreateProjectDto,
     @Authorized('id') userId: number,
   ) {
-    return this.projectService.create(
+    return this.projectService.createAsync(
       createProjectDto,
       userId,
     );
