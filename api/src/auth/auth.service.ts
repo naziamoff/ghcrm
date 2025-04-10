@@ -18,7 +18,7 @@ export class AuthService {
   ) {
   }
 
-  async signUp(signUpDto: SignUpDto) {
+  async signUp(signUpDto: SignUpDto): Promise<void> {
     const { email, password } = signUpDto;
 
     const existingUserByEmail = await this.userService.findByEmail(email);
@@ -35,10 +35,6 @@ export class AuthService {
     });
 
     await this.emailConfirmationService.sendVerificationToken(user.email);
-
-    return {
-      message: 'Signed up successfully. Please confirm your email. The confirmation letter was sent to your email',
-    };
   }
 
   async signIn(request: Request, signInDto: SignInDto) {
@@ -55,6 +51,14 @@ export class AuthService {
     return this.saveSession(request, user);
   }
 
+  /**
+   * Saves the user ID in the session and persists it.
+   *
+   * @param {Request} request - The HTTP request object containing the session.
+   * @param {User} user - The authenticated user to save in the session.
+   * @returns {Promise<{ user: User }>} - Resolves with the user object once saved.
+   * @throws {InternalServerErrorException} - If there is an error saving the session.
+   */
   async saveSession(request: Request, user: User) {
     return new Promise((resolve, reject) => {
       request.session.userId = user.id;
