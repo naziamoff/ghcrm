@@ -61,6 +61,8 @@ POSTGRES_DB=your-postgres-db
 DATABASE_URL=your-database-url
 ````
 
+You might also need to migrate the database, since there are some migrations already present.
+
 ### 5. Run the project using Docker Compose:
 
 Once you've set up your `.env` file, you can start the application:
