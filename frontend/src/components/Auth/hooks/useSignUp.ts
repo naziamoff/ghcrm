@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthRoutes } from '../typedefs/authRoutes';
 import { api } from '../../../api';
+import { ENDPOINTS } from '../../../constants/endpoints';
+import { ROUTES } from '../../../constants/routes';
 
 export const useSignUp = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setIsSuccess] = useState(false);
 
   const signUp = async (
     email: string,
@@ -22,20 +22,19 @@ export const useSignUp = () => {
       return;
     }
 
-    try {
-      await api.post(AuthRoutes.SignUp, { email, password });
+    setError('');
 
-      setIsSuccess(true);
-      setError('');
-      navigate('/auth/confirm-email');
+    try {
+      await api.post(ENDPOINTS.auth.signUp, { email, password });
+
+      navigate(ROUTES.auth.confirmEmail);
     } catch (err: any) {
       setError(err.response.data.message);
 
-      setIsSuccess(false);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { signUp, success, error, isLoading };
+  return { signUp, error, isLoading };
 };

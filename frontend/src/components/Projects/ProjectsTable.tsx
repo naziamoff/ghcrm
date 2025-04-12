@@ -1,19 +1,22 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { ProjectItem } from './ProjectItem';
-import React, { FC } from 'react';
-import { Project } from './typedefs/Project';
+import React, { FC, useEffect } from 'react';
+import { useHandleUpdate } from './hooks/useHandleUpdate';
+import { useHandleDelete } from './hooks/useHandleDelete';
+import { useProjectsContext } from './hooks/useProjectsContext';
+import { useFetchProjects } from './hooks/useFetchProjects';
 
-interface Props {
-  handleUpdate: (id: number) => void;
-  handleDelete: (id: number) => void;
-  projects: Project[];
-}
+export const ProjectsTable: FC = () => {
+  const projects = useProjectsContext(state => state.projects);
 
-export const ProjectsTable: FC<Props> = ({
-                                           handleUpdate,
-                                           handleDelete,
-                                           projects = [],
-                                         }) => {
+  const { fetchProjects } = useFetchProjects();
+  const { handleUpdate } = useHandleUpdate();
+  const { handleDelete } = useHandleDelete();
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
   return (
     <TableContainer component={Paper} sx={{ mt: 3 }}>
       <Table>

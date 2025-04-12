@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { ROUTES } from './routes';
+import { ROUTES } from './constants/routes';
 
 /**
  * Axios instance as a single entrypoint for making requests, configured with a base URL and credentials handling.
@@ -14,7 +14,7 @@ api.interceptors.response.use(
   response => response,
   (error: AxiosError) => {
     if (error.response && error.response.status === 401) {
-      window.location.href = ROUTES.SignIn;
+      window.location.href = ROUTES.auth.signIn;
     }
     return Promise.reject(error);
   },

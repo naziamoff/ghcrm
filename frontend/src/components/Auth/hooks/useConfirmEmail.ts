@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AuthRoutes } from '../typedefs/authRoutes';
 import { api } from '../../../api';
+import { ENDPOINTS } from '../../../constants/endpoints';
 
 export const useConfirmEmail = () => {
-  const baseUrl = process.env.REACT_APP_API_URL;
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
@@ -15,7 +14,8 @@ export const useConfirmEmail = () => {
   const [error, setError] = useState(null);
 
   const confirmEmail = async () => {
-    const route = `${AuthRoutes.ConfirmEmail}?token=${token}&email=${email}`;
+    const endpoint = ENDPOINTS.auth.confirmEmail;
+    const route = `${endpoint}?token=${token}&email=${email}`;
 
     try {
       await api.get(route);

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthRoutes } from '../typedefs/authRoutes';
-import { ROUTES } from '../../../routes';
 import { api } from '../../../api';
+import { ENDPOINTS } from '../../../constants/endpoints';
+import { ROUTES } from '../../../constants/routes';
 
 export const useSignIn = () => {
   const [error, setError] = useState('');
@@ -13,17 +13,18 @@ export const useSignIn = () => {
     email: string,
     password: string,
   ) => {
+    setError('');
+
     try {
       setLoading(true);
 
       const response = await api.post(
-        AuthRoutes.SignIn,
+        ENDPOINTS.auth.signIn,
         { email, password },
       );
 
       if (response.status === 200) {
-        setError('');
-        navigate(ROUTES.Projects);
+        navigate(ROUTES.projects.index);
       }
     } catch (err: any) {
       setError(err.response.data.message);

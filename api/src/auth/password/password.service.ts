@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AuthError } from '../constants';
 
@@ -14,7 +14,7 @@ export class PasswordService {
     const isPasswordValid = await bcrypt.compare(password, passwordHash);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException(AuthError.InvalidCredentials);
+      throw new BadRequestException(AuthError.InvalidCredentials);
     }
   }
 }

@@ -1,11 +1,10 @@
 import { Box, Button, TextField } from '@mui/material';
 import React, { FC, useState } from 'react';
+import { useAddProject } from './hooks/useAddProject';
 
-interface Props {
-  handleAddProject: (repoPath: string) => void;
-}
+export const AddProjectModule: FC = () => {
+  const { handleAddProject } = useAddProject();
 
-export const AddProjectModule: FC<Props> = ({ handleAddProject }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [repoPath, setRepoPath] = useState('');
 

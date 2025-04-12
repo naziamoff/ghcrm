@@ -1,23 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Alert, CircularProgress, Container, Typography } from '@mui/material';
-import { useProjects } from './hooks/useProjects';
 import { ProjectsTable } from './ProjectsTable';
 import { AddProjectModule } from './AddProjectModule';
+import { useProjectsContext } from './hooks/useProjectsContext';
 
 export const ProjectsPage = () => {
-  const {
-    error,
-    loading,
-    projects = [],
-    fetchProjects,
-    handleAddProject,
-    handleUpdate,
-    handleDelete,
-  } = useProjects();
-
-  useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
+  const error = useProjectsContext(state => state.error);
+  const isLoading = useProjectsContext(state => state.isLoading);
 
   return (
     <Container maxWidth="lg">
@@ -29,15 +18,11 @@ export const ProjectsPage = () => {
         <Alert severity="error">{error}</Alert>
       )}
 
-      <AddProjectModule handleAddProject={handleAddProject} />
+      <AddProjectModule />
 
-      <ProjectsTable
-        projects={projects}
-        handleUpdate={handleUpdate}
-        handleDelete={handleDelete}
-      />
+      <ProjectsTable />
 
-      {loading && <CircularProgress />}
+      {isLoading && <CircularProgress />}
     </Container>
   );
 };
