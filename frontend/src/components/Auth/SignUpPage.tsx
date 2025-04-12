@@ -1,15 +1,16 @@
 import React, { FormEvent, useState } from 'react';
-import { Box, Button, CircularProgress, Container, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSignUp } from './hooks/useSignUp';
-import { ROUTES } from '../../routes';
+import { ROUTES } from '../../constants/routes';
+import { Error } from '../common/Error';
 
 export const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const { signUp, error, success, isLoading } = useSignUp();
+  const { signUp, error, isLoading } = useSignUp();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,40 +62,33 @@ export const SignUpPage = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             sx={{ mb: 2 }}
           />
-          {error && (
-            <Typography color="error" sx={{ mb: 2 }}>
-              {error}
-            </Typography>
-          )}
-          {success && (
-            <Typography color="primary" sx={{ mb: 2 }}>
-              Sign Up Successful!
-            </Typography>
-          )}
+
+          {error && <Error text={error} />}
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
           >
-            Sign Up
+            {isLoading
+              ? 'Trying to sign up...'
+              : 'Sign up'}
           </Button>
 
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2">
               Already a user?{' '}
-              <Link component={RouterLink} to={ROUTES.SignIn}>Sign in</Link>
+              <Link
+                component={RouterLink}
+                to={ROUTES.auth.signIn}
+              >
+                Sign in
+              </Link>
             </Typography>
           </Box>
         </Box>
       </Box>
-
-      {isLoading && (
-        <Container maxWidth="sm">
-          <CircularProgress />
-          <Typography variant="body1">Signing you in...</Typography>
-        </Container>
-      )}
     </Container>
   );
 };

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Box, Button, CircularProgress, Container, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Link, TextField, Typography } from '@mui/material';
 import { useSignIn } from './hooks/useSignIn';
 import { Link as RouterLink } from 'react-router-dom';
-import { ROUTES } from '../../routes';
+import { ROUTES } from '../../constants/routes';
+import { Error } from '../common/Error';
 
 export const SignInPage = () => {
   const [email, setEmail] = useState('');
@@ -52,34 +53,32 @@ export const SignInPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             sx={{ mb: 2 }}
           />
-          {error && (
-            <Typography color="error" sx={{ mb: 2 }}>
-              {error}
-            </Typography>
-          )}
+
+          {error && <Error text={error} />}
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
           >
-            Sign In
+            {loading
+              ? 'Trying to sign in...'
+              : 'Sign in'}
           </Button>
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2">
               New to the project?{' '}
-              <Link component={RouterLink} to={ROUTES.SignUp}>Sign up</Link>
+              <Link
+                component={RouterLink}
+                to={ROUTES.auth.signUp}
+              >
+                Sign up
+              </Link>
             </Typography>
           </Box>
         </Box>
       </Box>
-
-      {loading && (
-        <Container maxWidth="sm">
-          <CircularProgress />
-          <Typography variant="body1">Signing you in...</Typography>
-        </Container>
-      )}
     </Container>
   );
 };

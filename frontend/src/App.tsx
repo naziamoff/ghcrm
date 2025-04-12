@@ -7,7 +7,7 @@ import { SignUpPage } from './components/Auth/SignUpPage';
 import { EmailConfirmedPage } from './components/Auth/EmailConfirmedPage';
 import { ConfirmEmailPage } from './components/Auth/ConfirmEmailPage';
 import { HomePage } from './components/Home/HomePage';
-import { ROUTES } from './routes';
+import { ROUTES } from './constants/routes';
 
 function App() {
   return (
@@ -15,27 +15,27 @@ function App() {
       <Container maxWidth="lg">
         <Routes>
           <Route
-            path={ROUTES.Home}
+            path={ROUTES.index}
             element={<HomePage />}
           />
           <Route
-            path={ROUTES.SignIn}
+            path={ROUTES.auth.signIn}
             element={<SignInPage />}
           />
           <Route
-            path={ROUTES.SignUp}
+            path={ROUTES.auth.signUp}
             element={<SignUpPage />}
           />
           <Route
-            path={ROUTES.EmailConfirmation}
-            element={<EmailConfirmedPage />}
-          />
-          <Route
-            path={ROUTES.ConfirmEmail}
+            path={ROUTES.auth.confirmEmail}
             element={<ConfirmEmailPage />}
           />
           <Route
-            path={ROUTES.Projects}
+            path={ROUTES.auth.emailConfirmed}
+            element={<EmailConfirmedPage />}
+          />
+          <Route
+            path={ROUTES.projects.index}
             element={<ProjectsPage />}
           />
         </Routes>

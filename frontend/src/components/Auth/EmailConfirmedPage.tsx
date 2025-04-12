@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
-import { Button, CircularProgress, Container, Typography } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useConfirmEmail } from './hooks/useConfirmEmail';
-import { ROUTES } from '../../routes';
+import { ROUTES } from '../../constants/routes';
+import { Loader } from '../common/Loader';
+import { Error } from '../common/Error';
 
 export const EmailConfirmedPage = () => {
   const { confirmEmail, loading, error } = useConfirmEmail();
@@ -12,22 +14,11 @@ export const EmailConfirmedPage = () => {
   }, [confirmEmail]);
 
   if (loading) {
-    return (
-      <Container maxWidth="sm">
-        <CircularProgress />
-        <Typography variant="body1">Verifying your email...</Typography>
-      </Container>
-    );
+    return <Loader text="Verifying your email" />;
   }
 
   if (error) {
-    return (
-      <Container maxWidth="sm">
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-      </Container>
-    );
+    return <Error text={error} />;
   }
 
   return (
@@ -36,15 +27,16 @@ export const EmailConfirmedPage = () => {
         Email Confirmation Successful
       </Typography>
       <Typography variant="body1" paragraph>
-        Your email has been successfully confirmed. You can now proceed to sign in.
+        Your email has been successfully confirmed.
+        Sign in to proceed.
       </Typography>
       <Button
         component={Link}
-        to={ROUTES.SignIn}
+        to={ROUTES.auth.signIn}
         variant="contained"
         color="primary"
       >
-        Go to Sign In
+        To Sign In
       </Button>
     </Container>
   );

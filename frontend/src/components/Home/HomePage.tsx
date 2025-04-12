@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '../../routes';
+import { ROUTES } from '../../constants/routes';
 
 export const HomePage = () => {
   return (
@@ -20,7 +20,7 @@ export const HomePage = () => {
           size="large"
           sx={{ mr: 2 }}
           component={Link}
-          to={ROUTES.SignUp}
+          to={ROUTES.auth.signUp}
         >
           Sign Up
         </Button>
@@ -29,7 +29,7 @@ export const HomePage = () => {
           color="primary"
           size="large"
           component={Link}
-          to={ROUTES.SignIn}
+          to={ROUTES.auth.signIn}
         >
           Sign In
         </Button>

@@ -5,7 +5,7 @@ export function ConfirmationTemplate({
   token,
   email,
 }: ConfirmationTemplateOptions): string {
-  const confirmLink = `${domain}/auth/email-confirmation?token=${token}&email=${email}`;
+  const confirmLink = `${domain}/auth/email-confirmed?token=${token}&email=${email}`;
 
   return `
     <html>
