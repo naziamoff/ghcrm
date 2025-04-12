@@ -1,19 +1,13 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../../user/user.service';
 import { AuthError } from '../constants';
 import { Request } from 'express';
 
 /**
  * AuthGuard to protect routes by checking if the user is authenticated.
- * Retrieves user information based on the session's userId and attaches it to the request.
- * Throws an `UnauthorizedException` if the user is not authenticated.
+ * Retrieves user information based on the session's userId (which is being saved during sign-in) and attaches it to the request.
  *
- * @param {ExecutionContext} context - The execution context containing the request.
+ * @Throws UnauthorizedException if the user is not authenticated.
  * @returns {Promise<boolean>} - Returns `true` if the user is authenticated, otherwise throws an exception.
  */
 @Injectable()
@@ -29,9 +23,11 @@ export class AuthGuard implements CanActivate {
 
     const user = await this.userService.findById(request.session.userId);
 
-    if (user) {
-      request.user = user;
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
+
+    request.user = user;
 
     return true;
   }

@@ -4,14 +4,14 @@ import { RequestWithUser } from '../guards/interfaces/requestWithUser';
 
 /**
  * Custom decorator to access user data from the request object.
- * Returns the entire user or a specific field if `data` is provided.
+ * Returns the entire user or a specific field if `userKey` is provided.
  *
- * @param {keyof User} data - The user field to retrieve (optional).
+ * @param {keyof User} userKey - The user field to retrieve (optional).
  * @param {ExecutionContext} ctx - The execution context.
- * @returns {User | any} - The user object or specific field.
+ * @returns {User[keyof User] | User} - The user object or specific field.
  */
 export const Authorized = createParamDecorator(
-  (userKey: keyof User, ctx: ExecutionContext) => {
+  (userKey: keyof User, ctx: ExecutionContext): User[keyof User] | User => {
     const request = ctx.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
 
