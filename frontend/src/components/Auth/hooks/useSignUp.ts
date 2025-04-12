@@ -18,6 +18,7 @@ export const useSignUp = () => {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      setIsLoading(false);
       return;
     }
 

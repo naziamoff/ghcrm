@@ -7,8 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start-api": "cd api && npm run start",
-    "start-fe": "cd frontend && npm run start",
-    "start-redis": "cd api && redis-server"
+    "start-fe": "cd frontend && npm run start"
   },
   "private": true,
   "devDependencies": {

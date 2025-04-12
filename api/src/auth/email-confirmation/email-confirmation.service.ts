@@ -30,6 +30,8 @@ export class EmailConfirmationService {
   /**
    * Verifies the token that is being sent from the email confirmation flow.
    * Verifies if the token is valid and not expired, then updates the user's verification status.
+   *
+   * Deletes the token and saves the user data in the session if verified.
    */
   public async newVerification(req: Request, dto: ConfirmationDto) {
     const userByEmail = await this.userService.findByEmail(dto.email);
@@ -81,6 +83,8 @@ export class EmailConfirmationService {
   /**
    * Generates a new verification token and stores it.
    * Deletes any existing token for the same email.
+   *
+   * @Returns {Promise<AccessToken>} that should be used in the verification email
    */
   private async generateVerificationToken(email: string): Promise<AccessToken> {
     const token = uuidv4();

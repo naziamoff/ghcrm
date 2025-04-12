@@ -42,7 +42,7 @@ export class AuthService {
     await this.emailConfirmationService.sendVerificationToken(user.email);
   }
 
-  async signIn(request: Request, signInDto: SignInDto) {
+  async signIn(request: Request, signInDto: SignInDto): Promise<void> {
     const { email, password } = signInDto;
 
     const user = await this.userService.findByEmail(email);
@@ -53,18 +53,14 @@ export class AuthService {
 
     await this.passwordService.validatePassword(password, user.passwordHash);
 
-    return this.saveSession(request, user);
+    await this.saveSession(request, user);
   }
 
   /**
-   * Saves the user ID in the session and persists it.
-   *
-   * @param {Request} request - The HTTP request object containing the session.
-   * @param {User} user - The authenticated user to save in the session.
-   * @returns {Promise<{ user: User }>} - Resolves with the user object once saved.
-   * @throws {InternalServerErrorException} - If there is an error saving the session.
-   */
-  async saveSession(request: Request, user: User) {
+   * Saves the userId in the session object and persists it.
+   * userId is needed for having the access to the userId on each request in the Auth Guard
+   **/
+  async saveSession(request: Request, user: User): Promise<{ user: User }> {
     return new Promise((resolve, reject) => {
       request.session.userId = user.id;
 
