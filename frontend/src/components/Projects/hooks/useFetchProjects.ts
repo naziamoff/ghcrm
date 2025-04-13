@@ -2,9 +2,10 @@ import { useCallback } from 'react';
 import { api } from '../../../api';
 import { ENDPOINTS } from '../../../constants/endpoints';
 import { useProjectsContext } from './useProjectsContext';
+import { useProjectsStoreController } from './useProjectsStoreController';
 
 export const useFetchProjects = () => {
-  const setProjects = useProjectsContext((state) => state.setProjects);
+  const { setProjectsList } = useProjectsStoreController();
   const setError = useProjectsContext((state) => state.setError);
   const setIsLoading = useProjectsContext((state) => state.setIsLoading);
 
@@ -15,13 +16,13 @@ export const useFetchProjects = () => {
     try {
       const { data } = await api.get(ENDPOINTS.projects.index);
 
-      setProjects(data);
+      setProjectsList(data);
     } catch (e: any) {
       setError(e.response?.data?.message);
     } finally {
       setIsLoading(false);
     }
-  }, [setError, setIsLoading, setProjects]);
+  }, [setError, setIsLoading, setProjectsList]);
 
   return { fetchProjects };
 };

@@ -18,6 +18,12 @@ export interface ProcessGithubRepositoryOptions {
   userId: number;
 }
 
+interface CreateMockProjectOptions {
+  ownerName: string;
+  name: string;
+  userId: number;
+}
+
 @Injectable()
 export class ProjectService {
   constructor(
@@ -59,16 +65,20 @@ export class ProjectService {
       throw new BadRequestException('Project is already added');
     }
 
-    const newProject = await this.createMockProject(userId);
+    const optimisticProject = await this.createOptimisticProject({
+      name,
+      userId,
+      ownerName: owner,
+    });
 
     this.processGithubRepository({
       owner,
       name,
       userId,
-      projectId: newProject.id,
+      projectId: optimisticProject.id,
     });
 
-    return newProject;
+    return optimisticProject;
   }
 
   async processGithubRepository({
@@ -77,19 +87,32 @@ export class ProjectService {
     projectId,
     userId,
   }: ProcessGithubRepositoryOptions) {
-    try {
-      const project = await this.githubService.getRepository({ owner, name });
+    const attempt = async (retriesLeft: number, delayMs?: number) => {
+      try {
+        const project = await this.githubService.getRepository({ owner, name });
 
-      await this.prismaService.project.update({
-        where: { id: projectId },
-        data: { ...project },
-      });
-    } catch {
-      await this.delete({
-        id: projectId,
-        userId,
-      });
-    }
+        await this.prismaService.project.update({
+          where: { id: projectId },
+          data: {
+            ...project,
+            isOptimistic: false,
+          },
+        });
+      } catch {
+        if (!retriesLeft) {
+          await this.delete({
+            id: projectId,
+            userId,
+          });
+        } else {
+          await new Promise((res) => setTimeout(res, delayMs));
+
+          attempt(retriesLeft - 1, delayMs);
+        }
+      }
+    };
+
+    await attempt(3, 2000);
   }
 
   async delete({ id, userId }: DeleteProjectDto) {
@@ -113,28 +136,39 @@ export class ProjectService {
       where: { id, userId },
     });
 
-    const githubProject = await this.githubService.getRepository({
+    const optimisticProject = await this.prismaService.project.update({
+      where: { id },
+      data: {
+        isOptimistic: true,
+      },
+    });
+
+    this.processGithubRepository({
       owner: project.ownerName,
       name: project.name,
+      userId,
+      projectId: id,
     });
 
-    return this.prismaService.project.update({
-      where: { id },
-      data: githubProject,
-    });
+    return optimisticProject;
   }
 
-  private async createMockProject(userId: number): Promise<Project> {
+  private async createOptimisticProject({
+    name,
+    ownerName,
+    userId,
+  }: CreateMockProjectOptions): Promise<Project> {
     return this.prismaService.project.create({
       data: {
-        name: 'Loading...',
+        name,
         url: 'Loading...',
-        ownerName: 'Loading...',
+        ownerName,
         userId,
         starsCount: 0,
         forksCount: 0,
         issuesCount: 0,
         externalCreatedAt: new Date(),
+        isOptimistic: true,
       },
     });
   }

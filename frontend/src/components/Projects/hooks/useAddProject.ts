@@ -4,36 +4,43 @@ import { useCallback } from 'react';
 import { api } from '../../../api';
 import { ENDPOINTS } from '../../../constants/endpoints';
 import { Project } from '../typedefs/Project';
+import { useProjectsStoreController } from './useProjectsStoreController';
 
 export const useAddProject = () => {
-  const setProjects = useProjectsContext((state) => state.setProjects);
+  const { deleteProject, updateProject, addProject } =
+    useProjectsStoreController();
   const setError = useProjectsContext((state) => state.setError);
 
   const { pollById } = usePollById();
 
-  const handleAddProject = useCallback(async (repoPath: string) => {
-    setError(null);
-    try {
-      const { data: newProject } = await api.post(
-        ENDPOINTS.projects.create,
-        { path: repoPath },
-      );
+  const handleAddProject = useCallback(
+    async (repoPath: string) => {
+      setError(null);
 
-      const onPollingFinished = (polledProject: Project) => {
-        setProjects((prevProjects) => prevProjects.map(
-          (existingProject) => existingProject.id === newProject.id
-            ? polledProject
-            : existingProject,
-        ));
-      };
+      try {
+        const { data: newProject } = await api.post(ENDPOINTS.projects.create, {
+          path: repoPath,
+        });
 
-      setProjects((prevProjects) => [...prevProjects, newProject]);
+        const onPollingFinished = (polledProject: Project) => {
+          updateProject(polledProject);
+        };
 
-      pollById(newProject.id, onPollingFinished);
-    } catch (e: any) {
-      setError(e.response?.data?.message);
-    }
-  }, [setError, setProjects, pollById]);
+        const onError = (error: Error) => {
+          deleteProject(newProject.id);
+
+          setError(error.message);
+        };
+
+        addProject(newProject);
+
+        pollById(newProject.id, onPollingFinished, onError);
+      } catch (e: any) {
+        setError(e.response?.data?.message);
+      }
+    },
+    [setError, addProject, pollById, updateProject, deleteProject],
+  );
 
   return { handleAddProject };
 };

@@ -9,10 +9,10 @@ interface Props {
 }
 
 export const ProjectItem: FC<Props> = ({
-                                         project,
-                                         handleUpdate,
-                                         handleDelete,
-                                       }) => (
+  project,
+  handleUpdate,
+  handleDelete,
+}) => (
   <TableRow key={project.id}>
     <TableCell>{project.ownerName}</TableCell>
     <TableCell>{project.name}</TableCell>
@@ -27,24 +27,26 @@ export const ProjectItem: FC<Props> = ({
     <TableCell>
       {Math.floor(new Date(project.externalCreatedAt).getTime() / 1000)}
     </TableCell>
-    <TableCell align="right">
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        onClick={() => handleUpdate(project.id)}
-        style={{ marginRight: 8 }}
-      >
-        Update
-      </Button>
-      <Button
-        variant="outlined"
-        color="error"
-        size="small"
-        onClick={() => handleDelete(project.id)}
-      >
-        Delete
-      </Button>
-    </TableCell>
+    {!project.isOptimistic && (
+      <TableCell align="right">
+        <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          onClick={() => handleUpdate(project.id)}
+          style={{ marginRight: 8 }}
+        >
+          Update
+        </Button>
+        <Button
+          variant="outlined"
+          color="error"
+          size="small"
+          onClick={() => handleDelete(project.id)}
+        >
+          Delete
+        </Button>
+      </TableCell>
+    )}
   </TableRow>
 );
