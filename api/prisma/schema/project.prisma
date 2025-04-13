@@ -9,6 +9,7 @@ model Project {
   issuesCount       Int      @map("issues_count")
   externalCreatedAt DateTime @map("external_created_at")
   createdAt         DateTime @default(now()) @map("created_at")
+  isOptimistic      Boolean  @default(false) @map("is_optimistic")
 
   user User @relation(fields: [userId], references: [id])
 

@@ -8,4 +8,5 @@ export interface Project {
   issuesCount: number;
   createdAt: number;
   externalCreatedAt: number;
+  isOptimistic: boolean;
 }
