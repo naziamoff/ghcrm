@@ -1,9 +1,9 @@
-# Node modules (they will be installed inside the container)
+# Node modules
 node_modules/
 !node_modules/@prisma
 !node_modules/.prisma
 !node_modules/prisma
-# Build output (you usually want to build it inside the container, not copy it from your machine)
+# Build output
 dist/
 build/
 # Log files
