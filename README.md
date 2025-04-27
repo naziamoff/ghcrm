@@ -71,6 +71,6 @@ Once you've set up your `.env` file, you can start the application:
 docker-compose up --build
 ```
 
-### 6. Open `http://localhost:3000`
+### 6. Open `http://localhost`
 
 ### 7. Enjoy (only if you find it enjoyable)
