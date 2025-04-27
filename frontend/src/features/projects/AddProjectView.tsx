@@ -1,16 +1,21 @@
-import { Box, Button, TextField } from '@mui/material';
-import React, { FC, useState } from 'react';
-import { useAddProject } from './hooks/useAddProject';
+import { Box, Button, TextField } from "@mui/material";
+import React, { FC, useState } from "react";
 
-export const AddProjectModule: FC = () => {
-  const { handleAddProject } = useAddProject();
+interface Props {
+  handleAddProject: (repoPath: string) => void;
+}
 
+export const AddProjectView: FC<Props> = ({ handleAddProject }) => {
   const [isAdding, setIsAdding] = useState(false);
-  const [repoPath, setRepoPath] = useState('');
+  const [repoPath, setRepoPath] = useState("");
 
   if (!isAdding) {
     return (
-      <Button variant="contained" color="primary" onClick={() => setIsAdding(true)}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setIsAdding(true)}
+      >
         Add New Project
       </Button>
     );
