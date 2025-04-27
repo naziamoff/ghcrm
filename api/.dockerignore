@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+!node_modules/@prisma
+!node_modules/.prisma
+!node_modules/prisma
+# Build output
+dist/
+build/
+# Log files
+*.log
+# Docker-related files
+.dockerignore
+Dockerfile
+# Git-related files
+.git/
+.gitignore
+# IDE/editor files
+.vscode/
+.idea/
+# System files
+.DS_Store
+Thumbs.db
+# Temporary files
+*.swp
+*.bak
+*.tmp
+# Other unnecessary files
+*.md
