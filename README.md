@@ -1,6 +1,6 @@
-# Google Drive Uploader
+# Github CRM
 
-A simple tool to upload multiple files to Google Drive and view the uploaded files.
+A simple tool to view information about your favorite Github projects
 
 ## Technologies Used
 
@@ -9,7 +9,7 @@ A simple tool to upload multiple files to Google Drive and view the uploaded fil
 - React (for the frontend user interface)
 - MongoDB (for storing session data)
 - Prisma (for simplified migration and querying)
-- PostgreSQL (for storing data related to file uploads)
+- PostgreSQL (for storing auth data and added projects)
 - Docker (for easy setup and deployment)
 - Github API (for fetching repo data)
 
